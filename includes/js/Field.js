@@ -37,6 +37,14 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 					case "ArrowDown":
 						this.moveShape();
 						break;
+					case "ArrowUp":
+						this.movingShape.turn();
+						if(!this.overlap(this.movingShape) && !this.outOfField(this.movingShape)) {
+							this.drawer.refresh(this.shapes);
+						} else {
+							this.movingShape.turnBack();
+						}
+						break;
 				}
 			}.bind(this));
 		}
@@ -125,12 +133,16 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 
 		generateShape() {
 			let shapeIndex = Math.floor(Math.random() * Config.structures.length);
-			let structure = Config.structures[shapeIndex];
+			let structure = Config.structures[shapeIndex][0];
 
 			let colorIndex = Math.floor(Math.random() * Config.colors.length);
 			let color = Config.colors[colorIndex];
 
-			return {structure, color};
+			return {structure, color, shapeIndex, position: 0, turn: function() {
+				this.structure = Config.structures[this.shapeIndex][Math.abs(++this.position) % Config.structures[this.shapeIndex].length];
+			}, turnBack: function() {
+				this.structure = Config.structures[this.shapeIndex][Math.abs(--this.position) % Config.structures[this.shapeIndex].length];
+			}};
 		}
 	};
 });
