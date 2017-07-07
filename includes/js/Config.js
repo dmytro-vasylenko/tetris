@@ -3,32 +3,58 @@ define([], function() {
 		blockSize: 30,
 		structures: [
 			[ // I
+				["X",
 				"X",
 				"X",
-				"X",
-				"X"
+				"X"],
+				["XXXX"]
 			],
 			[ // L
+				["X ",
 				"X ",
-				"X ",
-				"XX"
+				"XX"],
+				["XXX",
+				"X  "],
+				["XX",
+				" X",
+				" X"],
+				["  X",
+				"XXX"]
 			],
 			[ // T
-				"XXX",
-				" X "
+				["XXX",
+				" X "],
+				[" X",
+				"XX",
+				" X"],
+				[" X ",
+				"XXX"],
+				["X ",
+				"XX",
+				"X "]
 			],
 			[ // Z
-				"XX ",
-				" XX"
+				["XX ",
+				" XX"],
+				[" X",
+				"XX",
+				"X "]
 			],
 			[ // O
-				"XX",
-				"XX"
+				["XX",
+				"XX"]
 			],
 			[ // J
+				[" X",
 				" X",
-				" X",
-				"XX",
+				"XX"],
+				["X  ",
+				"XXX"],
+				["XX",
+				"X ",
+				"X "],
+				["XXX",
+				"  X"]
 			]
 		],
 		colors: ["red", "yellow", "blue", "green", "white", "orange"],
