@@ -2,24 +2,16 @@ define(["Config"], function(Config) {
 	return class Drawer {
 		constructor(context) {
 			this.context = context;
-			this.field = new Field();
 			this.shapes = [];
-
-			this.field.init();
 		}
 
 		init() {
 			this.drawCells();
-			setInterval(function() {
-				this.refresh();
-			}.bind(this), Config.tick)
 		}
 
 		setSize(width, height) {
 			this.width = width;
 			this.height = height;
-
-			this.field.setSize(width, height);
 
 			let cellsInHeight = Math.floor(this.height/Config.blockSize);
 			this.startY = (this.height - cellsInHeight*Config.blockSize)/2;
@@ -27,7 +19,6 @@ define(["Config"], function(Config) {
 			this.startX = (this.width - cellsInWidth*Config.blockSize)/2;
 
 			this.drawCells();
-			this.field.init();
 		}
 
 		drawCells() {
@@ -44,23 +35,13 @@ define(["Config"], function(Config) {
 			this.context.stroke();
 		}
 
-		addShape(shape, x, y, color) {
-			var newShape = {
-				shape, x, y, color, move: true
-			};
-
-			this.shapes.push(newShape);
-			this.drawShape(shape, x, y, color);
-		}
-
-		drawShape(shape, x, y, color) {
-			this.field.addShape(shape, x, y)
-			for(let h = 0; h < shape.length; h++) {
-				for(let w = 0; w < shape[h].length; w++) {
-					if(shape[h][w] == "X") {
-						let blockX = x + w;
-						let blockY = y + h;
-						this.drawBlock(blockX, blockY, color);
+		drawShape(shape) {
+			for(let h = 0; h < shape.structure.length; h++) {
+				for(let w = 0; w < shape.structure[h].length; w++) {
+					if(shape.structure[h][w] == "X") {
+						let blockX = shape.x + w;
+						let blockY = shape.y + h;
+						this.drawBlock(blockX, blockY, shape.color);
 					}
 				}
 			}
@@ -73,19 +54,11 @@ define(["Config"], function(Config) {
 			this.context.fillRect(blockX + 1, blockY + 1, Config.blockSize - 1, Config.blockSize - 1);
 		}
 
-		refresh() {
-			this.field.clear();
+		refresh(shapes) {
 			this.context.clearRect(0, 0, this.width, this.height);
 			this.drawCells();
-			for(var i = 0; i < this.shapes.length; i++) {
-				var shape = this.shapes[i];
-				if(!this.field.checkOutOfField(shape)) {
-					shape.y++;
-					if(this.field.overlap(shape)) {
-						shape.y--;
-					}
-				}
-				this.drawShape(shape.shape, shape.x, shape.y, shape.color);
+			for(var i = 0; i < shapes.length; i++) {
+				this.drawShape(shapes[i]);
 			}
 		}
 	};
