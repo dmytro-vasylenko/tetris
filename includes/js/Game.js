@@ -9,10 +9,7 @@ define(["Drawer", "Config", "Field"], function(Drawer, Config, Field) {
 
 		init() {
 			this.setFullScreen();
-			this.addShape(this.generateShape(), 5, 0);
-			setInterval(function() {
-				this.addShape(this.generateShape(), Math.floor(10 * Math.random()), 0);
-			}.bind(this), 2000);
+			this.field.startGame();
 		}
 
 		setFullScreen() {
@@ -24,23 +21,6 @@ define(["Drawer", "Config", "Field"], function(Drawer, Config, Field) {
 				// this.canvas.height = window.innerHeight;
 				// this.drawer.setSize(this.canvas.width, this.canvas.height);
 			}.bind(this), true);
-		}
-
-		generateShape() {
-			let shapeIndex = Math.floor(Math.random() * Config.structures.length);
-			let structure = Config.structures[shapeIndex];
-
-			let colorIndex = Math.floor(Math.random() * Config.colors.length);
-			let color = Config.colors[colorIndex];
-
-			return {structure, color};
-		}
-
-		addShape(shape, x, y) {
-			shape.x = x;
-			shape.y = y;
-			shape.move = true;
-			this.field.addShape(shape);
 		}
 	};
 });
