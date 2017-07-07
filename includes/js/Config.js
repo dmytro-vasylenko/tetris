@@ -32,6 +32,6 @@ define([], function() {
 			]
 		],
 		colors: ["red", "yellow", "blue", "green", "white", "orange"],
-		tick: 100
+		tick: 1000
 	};
 });
