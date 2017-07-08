@@ -18,7 +18,7 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 						if(this.movingShape.x > 0 && !this.overlap(this.movingShape)) {
 							this.movingShape.x--;
 							if(!this.overlap(this.movingShape)) {
-								this.drawer.refresh(this.shapes);
+								this.refreshField();
 							} else {
 								this.movingShape.x++;
 							}
@@ -28,7 +28,7 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 						if(this.movingShape.x + this.movingShape.structure[0].length < Math.floor(this.width/Config.blockSize)) {
 							this.movingShape.x++;
 							if(!this.overlap(this.movingShape)) {
-								this.drawer.refresh(this.shapes);
+								this.refreshField();
 							} else {
 								this.movingShape.x--;
 							}
@@ -40,7 +40,7 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 					case "ArrowUp":
 						this.movingShape.turn();
 						if(!this.overlap(this.movingShape) && !this.outOfField(this.movingShape)) {
-							this.drawer.refresh(this.shapes);
+							this.refreshField();
 						} else {
 							this.movingShape.turnBack();
 						}
@@ -58,7 +58,7 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 		}
 
 		startGame() {
-			this.addShape(this.generateShape(), 5, 0);
+			this.addShape(this.generateShape(), Math.floor(this.width/2/Config.blockSize), 0);
 		}
 
 		addShape(shape, x, y) {
@@ -66,16 +66,17 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 			shape.y = y;
 			this.movingShape = shape;
 			this.shapes.push(this.movingShape);
-			this.drawer.refresh(this.shapes);
+			this.refreshField();
 		}
 
 		moveShape() {
 			if(this.movingShape) {
+				this.movingShape.y++;
 				if(this.needStop(this.movingShape)) {
+					this.movingShape.y--;
 					this.nextShape();
 				} else {
-					this.movingShape.y++;
-					this.drawer.refresh(this.shapes);
+					this.refreshField();
 				}
 			}
 		}
@@ -99,7 +100,7 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 				for(var w = 0; w < shape1.structure[h].length; w++) {
 					if(shape1.structure[h][w] == "X") {
 						var blockX = shape1.x + w;
-						var blockY = shape1.y + h - 1;
+						var blockY = shape1.y + h;
 						if(this.isBlock(shape2, blockX, blockY)) {
 							return true;
 						}
@@ -123,12 +124,12 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 		}
 
 		outOfField(shape) {
-			return Math.floor(this.height/Config.blockSize) <= shape.y + shape.structure.length;
+			return Math.floor(this.height/Config.blockSize) < shape.y + shape.structure.length;
 		}
 
 		nextShape() {
 			delete this.movingShape;
-			this.addShape(this.generateShape(), 5, 0);
+			this.addShape(this.generateShape(), Math.floor(this.width/2/Config.blockSize), 0);
 		}
 
 		generateShape() {
@@ -143,6 +144,10 @@ define(["Config", "Drawer"], function(Config, Drawer) {
 			}, turnBack: function() {
 				this.structure = Config.structures[this.shapeIndex][Math.abs(--this.position) % Config.structures[this.shapeIndex].length];
 			}};
+		}
+
+		refreshField() {
+			this.drawer.refresh(this.shapes);
 		}
 	};
 });
